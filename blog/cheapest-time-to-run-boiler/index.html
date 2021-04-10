@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="generator" content="Hugo 0.82.0" />
+		<title>Playing with SQLite to figure out when to run my boiler - Eugenio Cano-Manuel Mendoza</title>
+
+		<meta name="description" content="I&rsquo;m in the process of switching to Agile Octopus, an electricity tariff that ties the price I pay with the wholesale price, updated every 30 minutes. The reason I&rsquo;ve been looking forward to switching to a tariff as dynamic as this one is to restrict my electric boiler to only run during the cheapest times of the day.
+My boiler is a direct unvented cylinder. In Layman&rsquo;s terms this is a big cyclinder that heats and stores water.">
+
+
+		
+	
+		
+
+
+
+
+<link rel="stylesheet" href="/css/ui.css">
+
+	
+		
+
+		<link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway">
+
+		
+	</head>
+
+<body>
+<header class="container no-print">
+	<div class="u-header">
+		<nav class="bar">
+	<ul><li>
+			<a href="/">
+				<img class="icon-text" src="/img/prev.svg"/>
+			</a>
+		</li><li><a href="/about">About</a></li><li><a href="/blog/">Posts</a></li></ul>
+</nav>
+
+	</div>
+</header>
+<main class="container">
+
+<article>
+	<header><hgroup id="brand">
+	<h1>Playing with SQLite to figure out when to run my boiler</h1>
+	<h5>
+		
+		<time datetime="2021-04-10 13:23:03 &#43;0100 BST">Apr 10, 2021</time>
+		<span class="no-print">
+			<span>
+	</h5>
+	
+</hgroup>
+<hr class="sep" />
+</header>
+	<p>I&rsquo;m in the process of switching to <a href="https://octopus.energy/agile/">Agile
+Octopus</a>, an electricity tariff that ties the
+price I pay with the wholesale price, updated every 30 minutes. The reason I&rsquo;ve
+been looking forward to switching to a tariff as dynamic as this one is to
+restrict my electric boiler to only run during the cheapest times of the day.</p>
+<p>My boiler is a <em>direct unvented cylinder</em>. In Layman&rsquo;s terms this is a big
+cyclinder that heats and stores water. In a perfect world all the water stored
+in the heater would not lose any heat over time when hot water is not being
+used, but this is a pretty old boiler so it&rsquo;s not really efficient. Leaving it
+&ldquo;on&rdquo; the whole day can actually use a lot of energy as it tries to compensate
+for loss of heat at random times.</p>
+<p>I got a smart meter installed at the beginning of March (a prerequisite for
+getting Agile). This also lets me track my usage on a half-hourly basis. I
+decided to run a few experiments with the boiler, mostly switching it off for
+some 24-hour periods, switching it on only during a 2-hour window, moving the
+window around etc. This was mostly to get a sense of how much power it needs to
+run when it&rsquo;s working.</p>
+<p>My guesstimate is that the boiler needs to run for about 2 hours at 3kW. My
+daily consumption is about 13kWh, so the boiler accounts for almost half of that.</p>
+<p>I found <a href="https://www.energy-stats.uk/download-historical-pricing-data/">a
+website</a> where I
+can download the historical pricing data for Agile in London. It&rsquo;s basically a
+CSV with the 30 minute window of the day and the price (pence per kW) for that
+window. The data looks like this</p>
+<pre><code>...
+2021-04-10T18:00:00Z,19:00,C,London,16.59
+2021-04-10T18:30:00Z,19:30,C,London,15.057
+2021-04-10T19:00:00Z,20:00,C,London,16.296
+2021-04-10T19:30:00Z,20:30,C,London,14.7
+2021-04-10T20:00:00Z,21:00,C,London,14.07
+2021-04-10T20:30:00Z,21:30,C,London,12.369
+2021-04-10T21:00:00Z,22:00,C,London,12.915
+2021-04-10T21:30:00Z,22:30,C,London,12.6
+...
+</code></pre><p>The question I need to answer is simple: What&rsquo;s, on average, the cheapest 2-hour
+window?</p>
+<p>It would be fairly simple to write a program to calculte this, but I wondered if
+there was a simple way to do it without writing any code. Surely a spreadsheet
+could calculate it (somehow) but I was thinking I could probably do this with
+command-line tools only.</p>
+<p>I decided to try solving this using SQLite. This was my first time using it so
+it took me a while to read through <a href="https://sqlite.org/docs.html">the
+documentation</a>. Granted I could have finished
+earlier had I written a small Python script but I figured I only had to pay this
+overhead once, and who knows, maybe knowing how to process CSVs in SQLite may
+turn useful in the future.</p>
+<p>The <code>sqlite3</code> command-line program is fairly easy to use and can automatically
+ingest CSVs into a table. The schema is determined from the header of the CSV
+file, which I had to add manually but no big deal.</p>
+<pre><code>sqlite&gt; .mode csv
+sqlite&gt; .import csv_agile_C_London.csv agile
+sqlite&gt; .schema agile
+CREATE TABLE IF NOT EXISTS &quot;agile&quot;(
+  &quot;time_utc&quot; TEXT,
+  &quot;time_london&quot; TEXT,
+  &quot;area_code&quot; TEXT,
+  &quot;area_name&quot; TEXT,
+  &quot;unit_price&quot; TEXT
+);
+</code></pre><p>Magic.</p>
+<p>Now the query. Let&rsquo;s get the average price per 30-minute window for 6 months and
+store it in a view.</p>
+<pre><code>sqlite&gt; CREATE VIEW avg_by_period AS SELECT TIME(time_utc) slot, AVG(unit_price) price FROM agile WHERE time_utc BETWEEN &quot;2020-10-01&quot; AND &quot;2021-03-01&quot; GROUP BY 1 ORDER BY 1 ASC;
+sqlite&gt; SELECT * FROM avg_by_period;
+00:00:00,8.30654304635761
+00:30:00,9.10941059602649
+01:00:00,8.94801655629139
+01:30:00,8.07373509933775
+02:00:00,8.2191357615894
+02:30:00,7.46091059602649
+03:00:00,7.83877152317881
+03:30:00,6.97457284768212
+04:00:00,7.61611589403974
+04:30:00,7.30459271523179
+05:00:00,8.10739072847682
+05:30:00,8.60464569536424
+06:00:00,9.55020198675496
+06:30:00,9.99593046357616
+07:00:00,9.84503642384106
+07:30:00,11.3778278145695
+08:00:00,10.9571324503311
+08:30:00,12.1820860927152
+09:00:00,12.0985033112583
+09:30:00,12.2710927152318
+10:00:00,12.088142384106
+10:30:00,11.9168046357616
+11:00:00,11.7900397350993
+11:30:00,12.0390496688742
+12:00:00,12.3426456953642
+12:30:00,12.3272781456954
+13:00:00,12.3196291390728
+13:30:00,11.4825496688742
+14:00:00,11.3758112582781
+14:30:00,11.0189503311258
+15:00:00,12.5045960264901
+15:30:00,13.8876754966887
+16:00:00,24.7437715231788
+16:30:00,28.9192947019868
+17:00:00,29.8375927152318
+17:30:00,30.551940397351
+18:00:00,27.3357417218543
+18:30:00,24.6017086092715
+19:00:00,14.0497649006622
+19:30:00,11.5805264900662
+20:00:00,11.6012483443709
+20:30:00,10.3603708609272
+21:00:00,11.0939105960265
+21:30:00,9.63385430463576
+22:00:00,10.1794370860927
+22:30:00,8.59692715231788
+23:00:00,9.52370860927153
+23:30:00,8.60109933774834
+</code></pre><p>It looks like the cheapest time on average is the 3:30 slot. But we&rsquo;re looking for the cheapest 2-hour window. We can do this with a subquery:</p>
+<pre><code>sqlite&gt; SELECT slot, (SELECT SUM(price) FROM avg_by_period WHERE slot IN (a.slot, TIME(a.slot,'+0.5 hours'), TIME(a.slot,'+1 hours'), TIME(a.slot,'+1.5 hours'))) from avg_by_period a;
+00:00:00,34.4377052980132
+00:30:00,34.350298013245
+01:00:00,32.701798013245
+01:30:00,31.5925529801324
+02:00:00,30.4933907284768
+02:30:00,29.8903708609271
+03:00:00,29.7340529801324
+03:30:00,30.0026721854305
+04:00:00,31.6327450331126
+04:30:00,33.5668311258278
+05:00:00,36.2581688741722
+05:30:00,37.9958145695364
+06:00:00,40.7689966887417
+06:30:00,42.1759271523179
+07:00:00,44.3620827814569
+07:30:00,46.6155496688742
+08:00:00,47.5088145695364
+08:30:00,48.6398245033113
+09:00:00,48.3745430463576
+09:30:00,48.0660794701987
+10:00:00,47.8340364238411
+10:30:00,48.0885397350993
+11:00:00,48.4990132450331
+11:30:00,49.0286026490066
+12:00:00,48.4721026490066
+12:30:00,47.5052682119205
+13:00:00,46.196940397351
+13:30:00,46.3819072847682
+14:00:00,48.7870331125828
+14:30:00,62.1549933774835
+15:00:00,80.0553377483444
+15:30:00,97.3883344370861
+16:00:00,114.052599337748
+16:30:00,116.644569536424
+17:00:00,112.326983443709
+17:30:00,96.5391556291391
+18:00:00,77.5677417218543
+18:30:00,61.8332483443709
+19:00:00,47.5919105960265
+19:30:00,44.6360562913907
+20:00:00,42.6893841059603
+20:30:00,41.2675728476821
+21:00:00,39.5041291390728
+21:30:00,37.9339271523179
+22:00:00,36.9011721854305
+22:30:00,35.0282781456954
+23:00:00,35.540761589404
+23:30:00,34.9650695364238
+</code></pre><p>I&rsquo;m using <em>IN</em> and not <em>BETWEEN</em> so that the query works for the periods between
+22:30 and 23:30, as the offset makes them time wrap around the day.</p>
+<p>It looks like the cheapest 2-hour window is the one that starts at <strong>3:00</strong>.</p>
+<p>I will probably set the boiler to run at <strong>4:00</strong> instead, as the difference is
+not great and it brings it closer to normal hours, when I&rsquo;ll be using hot water.</p>
+<p>SQLite was fun to use, I&rsquo;m impressed by how quick you get queryable data from
+CSV.</p>
+
+</article>
+<nav class="no-print post-nav">
+
+	<a class="prev-post" href="https://eugenio.sh/blog/favorite-reads/">
+		<img class="icon-text" src="/img/prev.svg"/>List of favorite articles and blogs from the web</a>
+
+
+</nav>
+
+
+
+
+	
+
+<script src="https://utteranc.es/client.js"
+        repo=""
+        issue-term="url"
+        label=""
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+
+	<div id="disqus_thread" class="no-print"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = '';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+			<hr class="sep" />
+		</main>
+		<footer class="container no-print">
+			<div class="u-footer">
+				
+<a href="mailto:me@eugenio.sh"><img class="icon-social" src="/img/email.svg" alt="Email Me!"/></a>
+
+
+<a href="https://github.com/eugecm/"><img class="icon-social" src="/img/github.svg" alt="Github"/></a>
+
+
+<a href="https://eugenio.sh/index.xml" target="_blank"><img class="icon-social" src="/img/feed.svg" alt="Feed"></a>
+
+
+				<p>
+					
+					Theme used: <a href="https://github.com/yursan9/manis-hugo-theme">Manis</a><br>
+					
+					
+					&copy; 2021 Eugenio Cano-Manuel Mendoza
+					
+					
+					| <a href="/about/license">License</a>
+					
+				</p>
+				
+				<a href="#brand">
+					<img class="icon-text" src="/img/toup.svg" alt="To Up"/>
+					<span>Back to Up</span>
+				</a>
+				
+			</div>
+		</footer>
+		
+	</body>
+</html>
+
