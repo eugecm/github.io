@@ -4,7 +4,7 @@
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="generator" content="Hugo 0.82.0" />
-		<title>Playing with SQLite to optimise my electricity usage - Eugenio Cano-Manuel Mendoza</title>
+		<title>Using SQLite to optimise my electricity usage - Eugenio Cano-Manuel Mendoza</title>
 
 		<meta name="description" content="I&rsquo;m in the process of switching to Agile Octopus, an electricity tariff that ties the price I pay with the wholesale price, updated every 30 minutes. The reason I&rsquo;ve been looking forward to switching to a tariff as dynamic as this one is to restrict my electric boiler to only run during the cheapest times of the day.
 My boiler is a direct unvented cylinder. In Layman&rsquo;s terms this is a big cyclinder that heats and stores water.">
@@ -44,7 +44,7 @@ My boiler is a direct unvented cylinder. In Layman&rsquo;s terms this is a big c
 
 <article>
 	<header><hgroup id="brand">
-	<h1>Playing with SQLite to optimise my electricity usage</h1>
+	<h1>Using SQLite to optimise my electricity usage</h1>
 	<h5>
 		
 		<time datetime="2021-04-10 13:23:03 &#43;0100 BST">Apr 10, 2021</time>
@@ -219,7 +219,7 @@ sqlite&gt; SELECT * FROM avg_by_period;
 23:00:00,35.540761589404
 23:30:00,34.9650695364238
 </code></pre><p>I&rsquo;m using <em>IN</em> and not <em>BETWEEN</em> so that the query works for the periods between
-22:30 and 23:30, as the offset makes them time wrap around the day.</p>
+22:30 and 23:30, as the offset makes the time wrap around the day.</p>
 <p>It looks like the cheapest 2-hour window is the one that starts at <strong>3:00</strong>.</p>
 <p>I will probably set the boiler to run at <strong>4:00</strong> instead, as the difference is
 not great and it brings it closer to &ldquo;normal&rdquo; hours, when I&rsquo;ll be using hot water.</p>
