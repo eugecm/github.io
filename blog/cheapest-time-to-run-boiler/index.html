@@ -1,63 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="generator" content="Hugo 0.82.0" />
-		<title>Using SQLite to optimise my electricity usage - Eugenio Cano-Manuel Mendoza</title>
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal blog">
+    
+    <link rel="shortcut icon" href="https://eugenio.sh/favicon.ico">
+    
+    <link rel="stylesheet" href="/css/style.min.css">
 
-		<meta name="description" content="I&rsquo;m in the process of switching to Agile Octopus, an electricity tariff that ties the price I pay with the wholesale price, updated every 30 minutes. The reason I&rsquo;ve been looking forward to switching to a tariff as dynamic as this one is to restrict my electric boiler to only run during the cheapest times of the day.
-My boiler is a direct unvented cylinder. In Layman&rsquo;s terms this is a big cyclinder that heats and stores water.">
-
-
-		
-		<link rel="shortcut icon" href="/img/favicon.ico">
-		
-	
-		
-
-
-
-
-<link rel="stylesheet" href="/css/ui.css">
-
-	
-		
-
-		<link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway">
-
-		
-	</head>
-
-<body>
-<header class="container no-print">
-	<div class="u-header">
-		<nav class="bar">
-	<ul><li>
-			<a href="/">
-				<img class="icon-text" src="/img/prev.svg"/>
-			</a>
-		</li><li><a href="/about">About</a></li><li><a href="/blog/">Posts</a></li></ul>
-</nav>
-
-	</div>
+    <title>Using SQLite to optimise my electricity usage</title>
+</head>
+<body><header id="banner">
+    <h2><a href="https://eugenio.sh">Eugenio Cano-Manuel Mendoza</a></h2>
+    <nav>
+        <ul>
+            <li>
+                <a href="/about" title="">About</a>
+            </li><li>
+                <a href="/blog/" title="">Posts</a>
+            </li>
+        </ul>
+    </nav>
 </header>
-<main class="container">
-
+<main id="content">
 <article>
-	<header><hgroup id="brand">
-	<h1>Using SQLite to optimise my electricity usage</h1>
-	<h5>
-		
-		<time datetime="2021-04-10 13:23:03 &#43;0100 BST">Apr 10, 2021</time>
-		<span class="no-print">
-			<span>
-	</h5>
-	
-</hgroup>
-<hr class="sep" />
-</header>
-	<p>I&rsquo;m in the process of switching to <a href="https://octopus.energy/agile/">Agile
+    <header id="post-header">
+        <h1>Using SQLite to optimise my electricity usage</h1>
+        <div>
+                <time>Apr 10, 2021</time>
+            </div>
+    </header><p>I&rsquo;m in the process of switching to <a href="https://octopus.energy/agile/">Agile
 Octopus</a>, an electricity tariff that ties the
 price I pay with the wholesale price, updated every 30 minutes. The reason I&rsquo;ve
 been looking forward to switching to a tariff as dynamic as this one is to
@@ -227,84 +199,10 @@ sqlite&gt; SELECT * FROM avg_by_period;
 not great and it brings it closer to &ldquo;normal&rdquo; hours, when I&rsquo;ll be using hot water.</p>
 <p>SQLite was fun to use, I&rsquo;m impressed by how quickly you can get queryable data
 from CSV files.</p>
-
 </article>
-<nav class="no-print post-nav">
 
-	<a class="prev-post" href="https://eugenio.sh/blog/favorite-reads/">
-		<img class="icon-text" src="/img/prev.svg"/>List of favorite articles and blogs from the web</a>
-
-
-</nav>
-
-
-
-
-	
-
-<script src="https://utteranc.es/client.js"
-        repo=""
-        issue-term="url"
-        label=""
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
-</script>
-
-
-
-	<div id="disqus_thread" class="no-print"></div>
-<script type="text/javascript">
-
-(function() {
-    
-    
-    if (window.location.hostname == "localhost")
-        return;
-
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    var disqus_shortname = '';
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-
-			<hr class="sep" />
-		</main>
-		<footer class="container no-print">
-			<div class="u-footer">
-				
-<a href="mailto:me@eugenio.sh"><img class="icon-social" src="/img/email.svg" alt="Email Me!"/></a>
-
-
-<a href="https://github.com/eugecm/"><img class="icon-social" src="/img/github.svg" alt="Github"/></a>
-
-
-<a href="https://eugenio.sh/index.xml" target="_blank"><img class="icon-social" src="/img/feed.svg" alt="Feed"></a>
-
-
-				<p>
-					
-					Theme used: <a href="https://github.com/yursan9/manis-hugo-theme">Manis</a><br>
-					
-					
-					&copy; 2021 Eugenio Cano-Manuel Mendoza
-					
-					
-					| <a href="/about/license">License</a>
-					
-				</p>
-				
-				<a href="#brand">
-					<img class="icon-text" src="/img/toup.svg" alt="To Up"/>
-					<span>Back to Up</span>
-				</a>
-				
-			</div>
-		</footer>
-		
-	</body>
+        </main><footer id="footer">
+    Copyright © 2022 Eugenio Cano-Manuel Mendoza
+</footer>
+</body>
 </html>
-

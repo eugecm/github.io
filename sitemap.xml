@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://eugenio.sh/about/</loc>
+    <lastmod>2022-02-14T08:00:00+01:00</lastmod>
+  </url><url>
     <loc>https://eugenio.sh/blog/</loc>
     <lastmod>2021-04-10T13:23:03+01:00</lastmod>
   </url><url>
@@ -11,11 +14,10 @@
     <loc>https://eugenio.sh/blog/cheapest-time-to-run-boiler/</loc>
     <lastmod>2021-04-10T13:23:03+01:00</lastmod>
   </url><url>
-    <loc>https://eugenio.sh/about/</loc>
-    <lastmod>2021-04-05T11:58:26+01:00</lastmod>
-  </url><url>
     <loc>https://eugenio.sh/blog/favorite-reads/</loc>
     <lastmod>2021-04-05T11:21:53+01:00</lastmod>
+  </url><url>
+    <loc>https://eugenio.sh/categories/</loc>
   </url><url>
     <loc>https://eugenio.sh/tags/</loc>
   </url>

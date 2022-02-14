@@ -5,38 +5,17 @@
     <link>https://eugenio.sh/</link>
     <description>Recent content on Eugenio Cano-Manuel Mendoza</description>
     <generator>Hugo -- gohugo.io</generator>
-    <copyright>&amp;copy; 2021 Eugenio Cano-Manuel Mendoza</copyright>
-    <lastBuildDate>Sat, 10 Apr 2021 13:23:03 +0100</lastBuildDate><atom:link href="https://eugenio.sh/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Using SQLite to optimise my electricity usage</title>
-      <link>https://eugenio.sh/blog/cheapest-time-to-run-boiler/</link>
-      <pubDate>Sat, 10 Apr 2021 13:23:03 +0100</pubDate>
-      
-      <guid>https://eugenio.sh/blog/cheapest-time-to-run-boiler/</guid>
-      <description>I&amp;rsquo;m in the process of switching to Agile Octopus, an electricity tariff that ties the price I pay with the wholesale price, updated every 30 minutes. The reason I&amp;rsquo;ve been looking forward to switching to a tariff as dynamic as this one is to restrict my electric boiler to only run during the cheapest times of the day.
-My boiler is a direct unvented cylinder. In Layman&amp;rsquo;s terms this is a big cyclinder that heats and stores water.</description>
-    </item>
+    <language>en-GB</language>
+    <lastBuildDate>Sat, 10 Apr 2021 13:23:03 +0100</lastBuildDate>
     
-    <item>
-      <title>About</title>
-      <link>https://eugenio.sh/about/</link>
-      <pubDate>Mon, 05 Apr 2021 11:58:26 +0100</pubDate>
-      
-      <guid>https://eugenio.sh/about/</guid>
-      <description>Hello! My name is Eugenio. I&amp;rsquo;m a backend engineer at Stripe.
-My hobbies include FFXIV, programming, figure skating and bouldering. I like tinkering with hardware and functional programming languages.
-Home setup is Linux, Doom Emacs, and a Unicomp Model M.</description>
-    </item>
+	<atom:link href="https://eugenio.sh/index.xml" rel="self" type="application/rss+xml" />
     
-    <item>
-      <title>List of favorite articles and blogs from the web</title>
-      <link>https://eugenio.sh/blog/favorite-reads/</link>
-      <pubDate>Mon, 05 Apr 2021 11:21:53 +0100</pubDate>
-      
-      <guid>https://eugenio.sh/blog/favorite-reads/</guid>
-      <description>This is a living document! It&amp;rsquo;s a list of interesting articles and blog posts I&amp;rsquo;ve found on the web. Will keep updated.
- Simple Systems Have Less Downtime John Carmack on Inlined Code The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!) Jane Street Core “Notes on Time” Software disenchantment Simple Made Easy Suckless Philosophy The Majestic Monolith  </description>
-    </item>
+    
+    
+    
+    
+    
+    
     
   </channel>
 </rss>
