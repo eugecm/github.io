@@ -4,14 +4,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Personal blog">
     
-    <link rel="icon"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOElEQVQ4T+1RvUoDQRicb89kLz8HQiw0jc9gJVoJ2toIClaWeQNfwjewsLARtLRVsFIkErtoEcGkSFLkQLzL5fbifusayBnE5joLF5ZZZmfmG3ap/tSqkaEjAJ7dWVYAg0N6aL68Jxqer5wsZlSkRl6Y8CvA9CIH5+1ypoC95RBLRY3/gL/yBjyIBV33C5m+cXNxhAWXDdWbrQaBVjK5UzE9UuO5U2WtahBOacqrWFXfgmB/NnTe886kK7spx3qYjPmYfpt8eXO/JgTdzt4xm/XtjdW7n3p67Q52IGhXgNIwZq6o8XhrVixzuSshhD/lGMY4ZC6o3feDosyXrQFFVyIcxShZVMkHHEdM9FozZH4Ow1ihXHARWbSBiFQSUqfvn9jhB8YYQbaExUkXC5hWssdvLtUQG+bTT0IovzSmqlJoAAAAAElFTkSuQmCC">
-    
+    <link rel="shortcut icon" href="https://eugenio.sh/favicon.ico">
     
     <link rel="stylesheet" href="/css/style.min.css">
 
     <title>Using SQLite to optimise my electricity usage</title>
-</head><body><header id="banner">
+</head>
+<body><header id="banner">
     <h2><a href="https://eugenio.sh">Eugenio Cano-Manuel Mendoza</a></h2>
     <nav>
         <ul>
@@ -28,7 +27,7 @@
     <header id="post-header">
         <h1>Using SQLite to optimise my electricity usage</h1>
         <div>
-                <time>Apr 10, 2021</time>
+                <time>April 10, 2021</time>
             </div>
     </header><p>I&rsquo;m in the process of switching to <a href="https://octopus.energy/agile/">Agile
 Octopus</a>, an electricity tariff that ties the
@@ -55,7 +54,7 @@ website</a> where I
 can download the historical pricing data for Agile in London. It&rsquo;s basically a
 CSV file with the 30 minute window of the day and the price (pence per kW) for
 that window. The data looks like this:</p>
-<pre><code>...
+<pre tabindex="0"><code>...
 2021-04-10T18:00:00Z,19:00,C,London,16.59
 2021-04-10T18:30:00Z,19:30,C,London,15.057
 2021-04-10T19:00:00Z,20:00,C,London,16.296
@@ -80,20 +79,20 @@ SQLite may turn useful in the future.</p>
 <p>The <code>sqlite3</code> command-line program is easy to use and can automatically ingest
 CSV files into a table. The schema is determined from the header of the CSV
 file, which I had to add manually but no big deal.</p>
-<pre><code>sqlite&gt; .mode csv
+<pre tabindex="0"><code>sqlite&gt; .mode csv
 sqlite&gt; .import csv_agile_C_London.csv agile
 sqlite&gt; .schema agile
-CREATE TABLE IF NOT EXISTS &quot;agile&quot;(
-  &quot;time_utc&quot; TEXT,
-  &quot;time_london&quot; TEXT,
-  &quot;area_code&quot; TEXT,
-  &quot;area_name&quot; TEXT,
-  &quot;unit_price&quot; TEXT
+CREATE TABLE IF NOT EXISTS &#34;agile&#34;(
+  &#34;time_utc&#34; TEXT,
+  &#34;time_london&#34; TEXT,
+  &#34;area_code&#34; TEXT,
+  &#34;area_name&#34; TEXT,
+  &#34;unit_price&#34; TEXT
 );
 </code></pre><p>Magic.</p>
 <p>Now the query. Let&rsquo;s get the average price per 30-minute window for 6 months and
 store it in a view.</p>
-<pre><code>sqlite&gt; CREATE VIEW avg_by_period AS SELECT TIME(time_utc) slot, AVG(unit_price) price FROM agile WHERE time_utc BETWEEN &quot;2020-10-01&quot; AND &quot;2021-03-01&quot; GROUP BY 1 ORDER BY 1 ASC;
+<pre tabindex="0"><code>sqlite&gt; CREATE VIEW avg_by_period AS SELECT TIME(time_utc) slot, AVG(unit_price) price FROM agile WHERE time_utc BETWEEN &#34;2020-10-01&#34; AND &#34;2021-03-01&#34; GROUP BY 1 ORDER BY 1 ASC;
 sqlite&gt; SELECT * FROM avg_by_period;
 00:00:00,8.30654304635761
 00:30:00,9.10941059602649
@@ -144,7 +143,7 @@ sqlite&gt; SELECT * FROM avg_by_period;
 23:00:00,9.52370860927153
 23:30:00,8.60109933774834
 </code></pre><p>It looks like the cheapest time, on average, is the 3:30 slot. But we&rsquo;re looking for the cheapest 2-hour window. We can do this with a subquery:</p>
-<pre><code>sqlite&gt; SELECT slot, (SELECT SUM(price) FROM avg_by_period WHERE slot IN (a.slot, TIME(a.slot,'+0.5 hours'), TIME(a.slot,'+1 hours'), TIME(a.slot,'+1.5 hours'))) from avg_by_period a;
+<pre tabindex="0"><code>sqlite&gt; SELECT slot, (SELECT SUM(price) FROM avg_by_period WHERE slot IN (a.slot, TIME(a.slot,&#39;+0.5 hours&#39;), TIME(a.slot,&#39;+1 hours&#39;), TIME(a.slot,&#39;+1.5 hours&#39;))) from avg_by_period a;
 00:00:00,34.4377052980132
 00:30:00,34.350298013245
 01:00:00,32.701798013245
