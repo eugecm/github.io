@@ -32,12 +32,11 @@
             </div>
     </header><p>Let me get straight to the point. I want a backup solution that:</p>
 <ol>
-<li>Follows the <a href="https://www.backblaze.com/blog/the-3-2-1-backup-strategy/">3-2-1 strategy</a></li>
+<li>Lets me follow the <a href="https://www.backblaze.com/blog/the-3-2-1-backup-strategy/">3-2-1 strategy</a> very easily</li>
 <li>Is <a href="https://www.gkogan.co/blog/simple-systems/">simple</a></li>
 <li>Is cheap</li>
 <li>Is secure</li>
 </ol>
-<p>This is what I&rsquo;ve come up after almost 2 years of making backups.</p>
 <h2 id="the-3-2-1-strategy">The 3-2-1 strategy</h2>
 <blockquote>
 <p>3 copies of data, 2 different media, 1 copy off-site.</p>
@@ -54,28 +53,27 @@ simpler and more established solutions out there like <code>rsync</code>, where 
 is copy files somewhere else and call it a day. <code>restic</code>, on the other hand,
 produces some opaque artifacts that can only be read by <code>restic</code>, so you&rsquo;re
 kind of locked into the software when it comes to managing your files.</p>
-<p>The reason I chose restic over rsync is because you get a set of features that
+<p>But the reason I chose restic over rsync is because you get a set of features that
 make it easy to implement the rest of the requirements (cheap &amp; secure) while
 still having an easy-to-use interface, even if the underlying implementation is
-not as straight-forward as rysnc&rsquo;s. My favourite features from restic are:</p>
+not as straight-forward as rysnc&rsquo;s. My favourite features are:</p>
 <ul>
 <li><strong>Encryption</strong>. Everything is encrypted, so my backups can live on a
-third-party server and I don&rsquo;t have to worry about prying eyes.</li>
-<li><strong>Many backends</strong> implemented, including S3 and SFTP. This gives me flexibility
+third-party server and I don&rsquo;t have to worry about prying eyes (too much).</li>
+<li><strong>Many backends</strong> supported, including S3 and SFTP. This gives me flexibility
 when it comes to choosing where to store the backups. Note that S3 not only
 gives you access to AWS but also any other file storage server that implements
 the S3 interface (DigitalOcean, Wasabi, Backblaze etc).</li>
-<li><strong>FUSE mount</strong>. I can access the files without having to download backups.</li>
+<li><strong>FUSE mount</strong>. I can access the files without having to fully download backups.</li>
 <li><strong>Versioning</strong>. In case I accidentally backup a corrupted file.</li>
 <li><strong>Incremental backups</strong>.</li>
 </ul>
 <h2 id="cheap">Cheap</h2>
 <p>My desktop PC and my Raspberry Pi are &ldquo;free&rdquo; so to speak, in the sense that
-I&rsquo;ve already paid for them, even before I started making backups, and
-electricity costs are negligible for both. The main cost is the third off-site
-copy which currently lives on Backblaze B2. The price is very reasonable (I&rsquo;m
-paying less than 30 cents a month). If it ever becomes a problem I can easily
-switch to another provider.</p>
+they&rsquo;ve already been paid for, electricity costs are negligible for both. The
+main cost is the third off-site copy which currently lives on Backblaze B2. The
+price is very reasonable (I&rsquo;m paying less than 30 cents a month) and if it ever
+becomes a problem I can easily switch to another provider.</p>
 <h2 id="secure">Secure</h2>
 <p><code>restic</code> manages encryption and verifies that the backups have not been tampered
 with. I&rsquo;m not a security expert, but I&rsquo;ve seen
@@ -85,19 +83,20 @@ that&rsquo;s good enough for me from a confidentiality and integrity point of vi
 version</a>
 of the 3-2-1 rule that adds an offline+immutable backup to the mix to protect
 from hackers that have accessed the infrastructure. I haven&rsquo;t figured out how
-to implement this in my workflow yet, perhaps an external hard drive that I
+to integrate this in my workflow yet, perhaps an external hard drive that I
 update semi-regularly will suffice.</p>
 <h2 id="worth-mentioning-timeshift--btrfs">Worth mentioning: Timeshift + Btrfs</h2>
-<p><a href="https://en.wikipedia.org/wiki/Btrfs">Btrfs</a> deserves a whole blog post, but
-since we&rsquo;re on the subject of data recovery I figured it&rsquo;s worth noting that
-Btrfs snapshots are an excellent tool for when you need to quickly rollback to
-a previous version of your hard drive and restoring from backups would be
-overkill. I&rsquo;m talking about restoring system files that that have been
-corrupted or deleted due to a bad update, as opposed to your hard-drive dying.</p>
-<p><a href="https://github.com/teejee2008/timeshift">Timeshift</a> makes the whole snapshot
-experience a breeze. The UI lets you create snapshots on-demand, schedule
-snapshots, and restore. It also supports creating snapshots using <code>rsync</code>, but
-it&rsquo;s not as fast as Btrfs snapshots.</p>
+<p><a href="https://en.wikipedia.org/wiki/Btrfs">Btrfs</a> deserves a whole blog post of its
+own, but since we&rsquo;re on the subject of data recovery I figured it&rsquo;s worth
+noting that Btrfs snapshots are an excellent tool for when you need to quickly
+rollback to a previous version of your hard drive and restoring from backups
+would be a complete overkill. I&rsquo;m talking about restoring system files that
+that have been corrupted or deleted due to a bad update, as opposed to a
+failing hard-drive.</p>
+<p><a href="https://github.com/teejee2008/timeshift">Timeshift</a> is what makes the whole
+snapshot experience a breeze. The UI lets you create snapshots on-demand,
+schedule snapshots, and restore. It also supports creating snapshots using
+<code>rsync</code>, but it&rsquo;s not as fast as Btrfs snapshots.</p>
 </article>
 
         </main><footer id="footer">
