@@ -1,64 +1,74 @@
 <!DOCTYPE html>
-<html><head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Personal blog">
-    
-    <link rel="icon"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOElEQVQ4T+1RvUoDQRicb89kLz8HQiw0jc9gJVoJ2toIClaWeQNfwjewsLARtLRVsFIkErtoEcGkSFLkQLzL5fbifusayBnE5joLF5ZZZmfmG3ap/tSqkaEjAJ7dWVYAg0N6aL68Jxqer5wsZlSkRl6Y8CvA9CIH5+1ypoC95RBLRY3/gL/yBjyIBV33C5m+cXNxhAWXDdWbrQaBVjK5UzE9UuO5U2WtahBOacqrWFXfgmB/NnTe886kK7spx3qYjPmYfpt8eXO/JgTdzt4xm/XtjdW7n3p67Q52IGhXgNIwZq6o8XhrVixzuSshhD/lGMY4ZC6o3feDosyXrQFFVyIcxShZVMkHHEdM9FozZH4Ow1ihXHARWbSBiFQSUqfvn9jhB8YYQbaExUkXC5hWssdvLtUQG+bTT0IovzSmqlJoAAAAAElFTkSuQmCC">
-    <title>Using SQLite to optimise my electricity usage</title>
-    <style>
-    	@media (prefers-color-scheme: dark){
-    		body {color:#fff;background:#000}
-    		a:link {color:#cdf}
-    		a:hover, a:visited:hover {color:#def}
-    		a:visited {color:#dcf}
-    	}
-    	body{
-    		margin:1em auto;
-    		max-width:40em;
-    		padding:0 .62em;
-    		font:1.2em/1.62 sans-serif
-    	}
-    	h1,h2,h3 {
-    		line-height:1.2
-    	}
-    	@media print{
-    		body{
-    			max-width:none
-    		}
-    	}
-    </style>
+<html lang="en">
+
+<head>
+  <title>Eugenio's Blog</title>
+  <html lang="en">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/png" href="data:image/png;base64,">
+  <style>
+@media (prefers-color-scheme: dark){
+	body {
+		background:#000
+	}
+}
+	body{
+		margin:1em auto;
+		max-width:40em;
+		padding:0 .62em 3.24em;
+		font:1.2em/1.62 sans-serif
+	}
+	h1,h2,h3 {
+		line-height:1.2
+	}
+	pre {
+		padding: 1em;
+		white-space: pre-wrap
+	}
+	blockquote {
+	  background: #f9f9f9;
+	  border-left: 10px solid #ccc;
+	  margin: 1.5em 10px;
+	  padding: 0.5em 10px;
+	}
+	@media print{
+		body{
+			max-width:none
+		}
+	}
+  </style>
 </head>
-<body><header id="banner">
-    <h2><a href="https://eugenio.sh">Eugenio Cano-Manuel Mendoza</a></h2>
-    <nav>
-        <ul>
-            <li>
-                <a href="/about/" title="">About</a>
-            </li><li>
-                <a href="/blog/" title="">Posts</a>
-            </li>
-        </ul>
-    </nav>
-</header>
-<main id="content">
-<article>
-    <header id="post-header">
-        <h1>Using SQLite to optimise my electricity usage</h1>
-        <div>
-                <time>Apr 10, 2021</time>
-            </div>
-    </header><p>I&rsquo;m in the process of switching to <a href="https://octopus.energy/agile/">Agile
+
+<body>
+  <h1 class="title">
+    Eugenio Cano-Manuel Mendoza
+  </h1>
+  <ul>
+	  <li><a href="https://eugenio.sh/blog/">Posts</a></li>
+	  
+	  <li><a href="https://eugenio.sh/bookmarks/">Bookmarks</a></li>
+	  
+	  <li><a href="https://eugenio.sh/about/">About me</a></li>
+  </ul>
+  <section class="section">
+    <div class="container">
+      
+<h1 class="title">
+  Using SQLite to optimise my electricity usage
+</h1>
+<p class="subtitle"><strong>2021-04-10</strong></p>
+<p>I'm in the process of switching to <a href="https://octopus.energy/agile/">Agile
 Octopus</a>, an electricity tariff that ties the
-price I pay with the wholesale price, updated every 30 minutes. The reason I&rsquo;ve
+price I pay with the wholesale price, updated every 30 minutes. The reason I've
 been looking forward to switching to a tariff as dynamic as this one is to
 restrict my electric boiler to only run during the cheapest times of the day.</p>
-<p>My boiler is a <em>direct unvented cylinder</em>. In Layman&rsquo;s terms this is a big
+<p>My boiler is a <em>direct unvented cylinder</em>. In Layman's terms this is a big
 cyclinder that heats and stores water. In a perfect world all the water stored
 in the heater would not lose any heat over time when hot water is not being
-used, but this is a pretty old boiler so it&rsquo;s not really efficient. Leaving it
-&ldquo;on&rdquo; the whole day can actually use a lot of energy as it tries to compensate
+used, but this is a pretty old boiler so it's not really efficient. Leaving it
+&quot;on&quot; the whole day can actually use a lot of energy as it tries to compensate
 for loss of heat at random times.</p>
 <p>I got a smart meter installed at the beginning of March (a prerequisite for
 getting Agile). This also lets me track my usage on a half-hourly basis. I
@@ -71,20 +81,21 @@ daily consumption is about 13kWh, so the boiler accounts for almost half of that
 (2h * 3kW = 6kWh).</p>
 <p>I found <a href="https://www.energy-stats.uk/download-historical-pricing-data/">a
 website</a> where I
-can download the historical pricing data for Agile in London. It&rsquo;s basically a
+can download the historical pricing data for Agile in London. It's basically a
 CSV file with the 30 minute window of the day and the price (pence per kW) for
 that window. The data looks like this:</p>
-<pre tabindex="0"><code>...
-2021-04-10T18:00:00Z,19:00,C,London,16.59
-2021-04-10T18:30:00Z,19:30,C,London,15.057
-2021-04-10T19:00:00Z,20:00,C,London,16.296
-2021-04-10T19:30:00Z,20:30,C,London,14.7
-2021-04-10T20:00:00Z,21:00,C,London,14.07
-2021-04-10T20:30:00Z,21:30,C,London,12.369
-2021-04-10T21:00:00Z,22:00,C,London,12.915
-2021-04-10T21:30:00Z,22:30,C,London,12.6
-...
-</code></pre><p>The question I need to answer is simple: What&rsquo;s, on average, the cheapest 2-hour
+<pre data-lang="txt" style="background-color:#2b303b;color:#c0c5ce;" class="language-txt "><code class="language-txt" data-lang="txt"><span>...
+</span><span>2021-04-10T18:00:00Z,19:00,C,London,16.59
+</span><span>2021-04-10T18:30:00Z,19:30,C,London,15.057
+</span><span>2021-04-10T19:00:00Z,20:00,C,London,16.296
+</span><span>2021-04-10T19:30:00Z,20:30,C,London,14.7
+</span><span>2021-04-10T20:00:00Z,21:00,C,London,14.07
+</span><span>2021-04-10T20:30:00Z,21:30,C,London,12.369
+</span><span>2021-04-10T21:00:00Z,22:00,C,London,12.915
+</span><span>2021-04-10T21:30:00Z,22:30,C,London,12.6
+</span><span>...
+</span></code></pre>
+<p>The question I need to answer is simple: What's, on average, the cheapest 2-hour
 window?</p>
 <p>It would be fairly straightforward to write a small program to calculte this,
 but I wondered if there was a simple way to do it without writing any code.
@@ -99,130 +110,133 @@ SQLite may turn useful in the future.</p>
 <p>The <code>sqlite3</code> command-line program is easy to use and can automatically ingest
 CSV files into a table. The schema is determined from the header of the CSV
 file, which I had to add manually but no big deal.</p>
-<pre tabindex="0"><code>sqlite&gt; .mode csv
-sqlite&gt; .import csv_agile_C_London.csv agile
-sqlite&gt; .schema agile
-CREATE TABLE IF NOT EXISTS &#34;agile&#34;(
-  &#34;time_utc&#34; TEXT,
-  &#34;time_london&#34; TEXT,
-  &#34;area_code&#34; TEXT,
-  &#34;area_name&#34; TEXT,
-  &#34;unit_price&#34; TEXT
-);
-</code></pre><p>Magic.</p>
-<p>Now the query. Let&rsquo;s get the average price per 30-minute window for 6 months and
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>sqlite&gt; .mode csv
+</span><span>sqlite&gt; .import csv_agile_C_London.csv agile
+</span><span>sqlite&gt; .schema agile
+</span><span>CREATE TABLE IF NOT EXISTS &quot;agile&quot;(
+</span><span>  &quot;time_utc&quot; TEXT,
+</span><span>  &quot;time_london&quot; TEXT,
+</span><span>  &quot;area_code&quot; TEXT,
+</span><span>  &quot;area_name&quot; TEXT,
+</span><span>  &quot;unit_price&quot; TEXT
+</span><span>);
+</span></code></pre>
+<p>Magic.</p>
+<p>Now the query. Let's get the average price per 30-minute window for 6 months and
 store it in a view.</p>
-<pre tabindex="0"><code>sqlite&gt; CREATE VIEW avg_by_period AS SELECT TIME(time_utc) slot, AVG(unit_price) price FROM agile WHERE time_utc BETWEEN &#34;2020-10-01&#34; AND &#34;2021-03-01&#34; GROUP BY 1 ORDER BY 1 ASC;
-sqlite&gt; SELECT * FROM avg_by_period;
-00:00:00,8.30654304635761
-00:30:00,9.10941059602649
-01:00:00,8.94801655629139
-01:30:00,8.07373509933775
-02:00:00,8.2191357615894
-02:30:00,7.46091059602649
-03:00:00,7.83877152317881
-03:30:00,6.97457284768212
-04:00:00,7.61611589403974
-04:30:00,7.30459271523179
-05:00:00,8.10739072847682
-05:30:00,8.60464569536424
-06:00:00,9.55020198675496
-06:30:00,9.99593046357616
-07:00:00,9.84503642384106
-07:30:00,11.3778278145695
-08:00:00,10.9571324503311
-08:30:00,12.1820860927152
-09:00:00,12.0985033112583
-09:30:00,12.2710927152318
-10:00:00,12.088142384106
-10:30:00,11.9168046357616
-11:00:00,11.7900397350993
-11:30:00,12.0390496688742
-12:00:00,12.3426456953642
-12:30:00,12.3272781456954
-13:00:00,12.3196291390728
-13:30:00,11.4825496688742
-14:00:00,11.3758112582781
-14:30:00,11.0189503311258
-15:00:00,12.5045960264901
-15:30:00,13.8876754966887
-16:00:00,24.7437715231788
-16:30:00,28.9192947019868
-17:00:00,29.8375927152318
-17:30:00,30.551940397351
-18:00:00,27.3357417218543
-18:30:00,24.6017086092715
-19:00:00,14.0497649006622
-19:30:00,11.5805264900662
-20:00:00,11.6012483443709
-20:30:00,10.3603708609272
-21:00:00,11.0939105960265
-21:30:00,9.63385430463576
-22:00:00,10.1794370860927
-22:30:00,8.59692715231788
-23:00:00,9.52370860927153
-23:30:00,8.60109933774834
-</code></pre><p>It looks like the cheapest time, on average, is the 3:30 slot. But we&rsquo;re looking for the cheapest 2-hour window. We can do this with a subquery:</p>
-<pre tabindex="0"><code>sqlite&gt; SELECT slot, (SELECT SUM(price) FROM avg_by_period WHERE slot IN (a.slot, TIME(a.slot,&#39;+0.5 hours&#39;), TIME(a.slot,&#39;+1 hours&#39;), TIME(a.slot,&#39;+1.5 hours&#39;))) from avg_by_period a;
-00:00:00,34.4377052980132
-00:30:00,34.350298013245
-01:00:00,32.701798013245
-01:30:00,31.5925529801324
-02:00:00,30.4933907284768
-02:30:00,29.8903708609271
-03:00:00,29.7340529801324
-03:30:00,30.0026721854305
-04:00:00,31.6327450331126
-04:30:00,33.5668311258278
-05:00:00,36.2581688741722
-05:30:00,37.9958145695364
-06:00:00,40.7689966887417
-06:30:00,42.1759271523179
-07:00:00,44.3620827814569
-07:30:00,46.6155496688742
-08:00:00,47.5088145695364
-08:30:00,48.6398245033113
-09:00:00,48.3745430463576
-09:30:00,48.0660794701987
-10:00:00,47.8340364238411
-10:30:00,48.0885397350993
-11:00:00,48.4990132450331
-11:30:00,49.0286026490066
-12:00:00,48.4721026490066
-12:30:00,47.5052682119205
-13:00:00,46.196940397351
-13:30:00,46.3819072847682
-14:00:00,48.7870331125828
-14:30:00,62.1549933774835
-15:00:00,80.0553377483444
-15:30:00,97.3883344370861
-16:00:00,114.052599337748
-16:30:00,116.644569536424
-17:00:00,112.326983443709
-17:30:00,96.5391556291391
-18:00:00,77.5677417218543
-18:30:00,61.8332483443709
-19:00:00,47.5919105960265
-19:30:00,44.6360562913907
-20:00:00,42.6893841059603
-20:30:00,41.2675728476821
-21:00:00,39.5041291390728
-21:30:00,37.9339271523179
-22:00:00,36.9011721854305
-22:30:00,35.0282781456954
-23:00:00,35.540761589404
-23:30:00,34.9650695364238
-</code></pre><p>I&rsquo;m using <em>IN</em> and not <em>BETWEEN</em> so that the query works for the periods between
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>sqlite&gt; CREATE VIEW avg_by_period AS SELECT TIME(time_utc) slot, AVG(unit_price) price FROM agile WHERE time_utc BETWEEN &quot;2020-10-01&quot; AND &quot;2021-03-01&quot; GROUP BY 1 ORDER BY 1 ASC;
+</span><span>sqlite&gt; SELECT * FROM avg_by_period;
+</span><span>00:00:00,8.30654304635761
+</span><span>00:30:00,9.10941059602649
+</span><span>01:00:00,8.94801655629139
+</span><span>01:30:00,8.07373509933775
+</span><span>02:00:00,8.2191357615894
+</span><span>02:30:00,7.46091059602649
+</span><span>03:00:00,7.83877152317881
+</span><span>03:30:00,6.97457284768212
+</span><span>04:00:00,7.61611589403974
+</span><span>04:30:00,7.30459271523179
+</span><span>05:00:00,8.10739072847682
+</span><span>05:30:00,8.60464569536424
+</span><span>06:00:00,9.55020198675496
+</span><span>06:30:00,9.99593046357616
+</span><span>07:00:00,9.84503642384106
+</span><span>07:30:00,11.3778278145695
+</span><span>08:00:00,10.9571324503311
+</span><span>08:30:00,12.1820860927152
+</span><span>09:00:00,12.0985033112583
+</span><span>09:30:00,12.2710927152318
+</span><span>10:00:00,12.088142384106
+</span><span>10:30:00,11.9168046357616
+</span><span>11:00:00,11.7900397350993
+</span><span>11:30:00,12.0390496688742
+</span><span>12:00:00,12.3426456953642
+</span><span>12:30:00,12.3272781456954
+</span><span>13:00:00,12.3196291390728
+</span><span>13:30:00,11.4825496688742
+</span><span>14:00:00,11.3758112582781
+</span><span>14:30:00,11.0189503311258
+</span><span>15:00:00,12.5045960264901
+</span><span>15:30:00,13.8876754966887
+</span><span>16:00:00,24.7437715231788
+</span><span>16:30:00,28.9192947019868
+</span><span>17:00:00,29.8375927152318
+</span><span>17:30:00,30.551940397351
+</span><span>18:00:00,27.3357417218543
+</span><span>18:30:00,24.6017086092715
+</span><span>19:00:00,14.0497649006622
+</span><span>19:30:00,11.5805264900662
+</span><span>20:00:00,11.6012483443709
+</span><span>20:30:00,10.3603708609272
+</span><span>21:00:00,11.0939105960265
+</span><span>21:30:00,9.63385430463576
+</span><span>22:00:00,10.1794370860927
+</span><span>22:30:00,8.59692715231788
+</span><span>23:00:00,9.52370860927153
+</span><span>23:30:00,8.60109933774834
+</span></code></pre>
+<p>It looks like the cheapest time, on average, is the 3:30 slot. But we're looking for the cheapest 2-hour window. We can do this with a subquery:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>sqlite&gt; SELECT slot, (SELECT SUM(price) FROM avg_by_period WHERE slot IN (a.slot, TIME(a.slot,&#39;+0.5 hours&#39;), TIME(a.slot,&#39;+1 hours&#39;), TIME(a.slot,&#39;+1.5 hours&#39;))) from avg_by_period a;
+</span><span>00:00:00,34.4377052980132
+</span><span>00:30:00,34.350298013245
+</span><span>01:00:00,32.701798013245
+</span><span>01:30:00,31.5925529801324
+</span><span>02:00:00,30.4933907284768
+</span><span>02:30:00,29.8903708609271
+</span><span>03:00:00,29.7340529801324
+</span><span>03:30:00,30.0026721854305
+</span><span>04:00:00,31.6327450331126
+</span><span>04:30:00,33.5668311258278
+</span><span>05:00:00,36.2581688741722
+</span><span>05:30:00,37.9958145695364
+</span><span>06:00:00,40.7689966887417
+</span><span>06:30:00,42.1759271523179
+</span><span>07:00:00,44.3620827814569
+</span><span>07:30:00,46.6155496688742
+</span><span>08:00:00,47.5088145695364
+</span><span>08:30:00,48.6398245033113
+</span><span>09:00:00,48.3745430463576
+</span><span>09:30:00,48.0660794701987
+</span><span>10:00:00,47.8340364238411
+</span><span>10:30:00,48.0885397350993
+</span><span>11:00:00,48.4990132450331
+</span><span>11:30:00,49.0286026490066
+</span><span>12:00:00,48.4721026490066
+</span><span>12:30:00,47.5052682119205
+</span><span>13:00:00,46.196940397351
+</span><span>13:30:00,46.3819072847682
+</span><span>14:00:00,48.7870331125828
+</span><span>14:30:00,62.1549933774835
+</span><span>15:00:00,80.0553377483444
+</span><span>15:30:00,97.3883344370861
+</span><span>16:00:00,114.052599337748
+</span><span>16:30:00,116.644569536424
+</span><span>17:00:00,112.326983443709
+</span><span>17:30:00,96.5391556291391
+</span><span>18:00:00,77.5677417218543
+</span><span>18:30:00,61.8332483443709
+</span><span>19:00:00,47.5919105960265
+</span><span>19:30:00,44.6360562913907
+</span><span>20:00:00,42.6893841059603
+</span><span>20:30:00,41.2675728476821
+</span><span>21:00:00,39.5041291390728
+</span><span>21:30:00,37.9339271523179
+</span><span>22:00:00,36.9011721854305
+</span><span>22:30:00,35.0282781456954
+</span><span>23:00:00,35.540761589404
+</span><span>23:30:00,34.9650695364238
+</span></code></pre>
+<p>I'm using <em>IN</em> and not <em>BETWEEN</em> so that the query works for the periods between
 22:30 and 23:30, as the offset makes the time wrap around the day.</p>
 <p>It looks like the cheapest 2-hour window is the one that starts at <strong>3:00</strong>.</p>
 <p>I will probably set the boiler to run at <strong>4:00</strong> instead, as the difference is
-not great and it brings it closer to &ldquo;normal&rdquo; hours, when I&rsquo;ll be using hot water.</p>
-<p>SQLite was fun to use, I&rsquo;m impressed by how quickly you can get queryable data
+not great and it brings it closer to &quot;normal&quot; hours, when I'll be using hot water.</p>
+<p>SQLite was fun to use, I'm impressed by how quickly you can get queryable data
 from CSV files.</p>
-</article>
 
-        </main><footer id="footer">
-    Copyright © 2022 Eugenio Cano-Manuel Mendoza
-</footer>
+
+    </div>
+  </section>
 </body>
+
 </html>
